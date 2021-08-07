@@ -1,10 +1,11 @@
 import React from 'react';
+import CashRegister from './pages/CashRegister';
 
 function App() {
   return (
-    <div >
-
-    </div>
+    <>
+      <CashRegister />
+    </>
   );
 }
 
