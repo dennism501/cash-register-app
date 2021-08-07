@@ -1,3 +1,3 @@
-export const totalCharge = (chargeAmounts: Array<number>): number => {
-  return chargeAmounts.reduce((acc, amount) => acc + amount, 0);
+export const totalCharge = (chargeAmounts: Array<string>): number => {
+  return chargeAmounts.reduce((acc, amount) => acc + parseFloat(amount), 0);
 };
