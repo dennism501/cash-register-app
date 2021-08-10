@@ -1,53 +1,114 @@
 import React from 'react';
+import { ChargePriceAmount, ItemList, TotalLine, } from '../components/ChargeList/ChargeList';
+
+import { ChargeAmountCapture, KeyPadButton, KeyPadHolder, KeyPadMainHolder, MainScreen } from '../components/Keypad/KeyPad';
+import { MainContainer, KeypadContainer, ChargeListContainer } from '../components/MainLayout/MainLayout';
 import { totalCharge } from '../modules/registerFunctions'
 
 
-
 const CashRegister: React.FC = () => {
-    const [charge, setCharge] = React.useState<string>("")
+    const [charge, setCharge] = React.useState<Array<string>>([])
     const [chargeList, setChargeList] = React.useState<Array<string>>([])
 
 
     //Creates the charge list from the accepted charges
-    function addChargeToList(newChargeAmount: string) {
-        if (newChargeAmount === "") {
-            return
-        }
-        setChargeList([...chargeList, newChargeAmount])
-        setCharge("")
+    function addChargeToList() {
+        setChargeList([...chargeList, Number(charge.join("")).toFixed(2)])
+        console.log(totalCharge(chargeList));
 
+        setCharge([])
+    }
+
+    function handleDelete() {
+        const newArray: string[] = [...charge]
+        newArray.pop()
+        setCharge(newArray)
     }
 
 
     //Handles the floating number conversion from user input
-    function handleCharge(event: React.ChangeEvent<HTMLInputElement>) {
-        let start: any = event.target.selectionStart!;
-        let val: string = event.target.value;
-        val = val.replace(/([^0-9.]+)/, "");
-        val = val.replace(/^(0|\.)/, "");
-        const match = /(\d{0,7})[^.]*((?:\.\d{0,2})?)/g.exec(val);
-        const value = match![1] + match![2];
-        setCharge(value)
-        if (val.length > 0) {
-            event.target.value = Number(value).toFixed(2);
-            event.target.setSelectionRange(start, start);
-            setCharge(Number(value).toFixed(2));
-        }
+    function handleCharge(event: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>) {
+        event.preventDefault()
+        const test = event.target as HTMLButtonElement
+        let val: string = test.textContent!;
+        setCharge([...charge, val])
 
     }
+
     return (
-        <div>
-            <input type="text" name="captureCharge" placeholder="0.00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleCharge(e)} value={charge} />
-            <button type="submit" onClick={() => addChargeToList(charge)} >Add</button>
+        <>
+            <MainContainer>
+                <KeypadContainer>
+                    <MainScreen>
+                        <ChargeAmountCapture>
+                            {charge.length === 0 ? <p>R 0.00</p> : charge}
+                        </ChargeAmountCapture>
+                        <KeyPadMainHolder>
 
-            {
-                chargeList.map((amount, index) => (
-                    <p key={index}>{amount}</p>
-                ))
+                            <KeyPadHolder>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    1
+                                </KeyPadButton>
 
-            }
-            <span>Total {totalCharge(chargeList)}</span>
-        </div >
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    2
+                                </KeyPadButton >
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    3
+                                </KeyPadButton>
+                            </KeyPadHolder>
+
+                            <KeyPadHolder>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    4
+                                </KeyPadButton>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    5
+                                </KeyPadButton>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    6
+                                </KeyPadButton>
+                            </KeyPadHolder>
+
+                            <KeyPadHolder>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    7
+                                </KeyPadButton>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    8
+                                </KeyPadButton>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    9
+                                </KeyPadButton>
+                            </KeyPadHolder>
+
+                            <KeyPadHolder>
+                                <KeyPadButton onClick={handleDelete}>
+                                    ❌
+                                </KeyPadButton>
+                                <KeyPadButton onClick={(e) => handleCharge(e)}>
+                                    0
+                                </KeyPadButton>
+                                <KeyPadButton onClick={addChargeToList} >
+                                    ✅
+                                </KeyPadButton>
+
+                            </KeyPadHolder>
+                        </KeyPadMainHolder>
+                    </MainScreen>
+                </KeypadContainer>
+                <ChargeListContainer>
+                    <ItemList>
+                        {chargeList.length > 0 ? chargeList.map((amount, index) => (
+                            <ChargePriceAmount key={index}>R {amount}</ChargePriceAmount>
+                        )) : (<ChargePriceAmount>R 0.00</ChargePriceAmount>)}
+                        <TotalLine />
+                        <ChargePriceAmount>{`${totalCharge(chargeList).toFixed(2)}`}</ChargePriceAmount>
+                    </ItemList>
+                </ChargeListContainer>
+
+            </MainContainer>
+        </>
     );
 }
 
