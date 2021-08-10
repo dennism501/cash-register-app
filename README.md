@@ -1,4 +1,4 @@
-# Yoco Cash register
+# Cash register
 
 This is a Keypad application that a user can use to total charges that their customers has paid for and display the total bill.
 
