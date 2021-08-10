@@ -18,7 +18,7 @@ This is a Keypad application that a user can use to total charges that their cus
 
 ### How to run 🚀
 
-1. Unzip the folder with any zipping too like [7zip]()
+1. Run `git clone git@github.com:dennism501/cash-register-app.git`
 2. `cd` into the `/src` folder
 3. Run `npm install`
 4. The check for `http://localhost:3000` in your browser
